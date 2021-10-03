@@ -1,0 +1,111 @@
+//#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+
+int comp = 0;
+
+//here i = index of first element of x[] and j = last element index of x[] 
+//min and max are the output
+
+void Rmaxmin(int A[],int i, int j, int *fmax, int *fmin)
+{
+    if(i==j) // i=j means only one element
+    {
+    	*fmax = A[0];
+        *fmin = A[0];
+        return;
+	}
+	else if(i == j-1)//i = j-1 means two elements
+	{
+		if(A[i] < A[j]){
+			*fmax = A[j];
+			*fmin = A[i];
+		}
+		else{
+			*fmax = A[i];
+			*fmin = A[j];
+		}
+		comp++;
+		return;
+	}
+	else {
+		int mid = (i+j)/2;
+			int gmax = fmax;
+			int gmin = fmin;
+		Rmaxmin(A, i, mid, &gmax, &gmin);
+		    int hmax = fmax;
+		    int hmin = fmin;
+		Rmaxmin(A, mid+1, j, &hmax, &hmin);
+		//fmax = MAX (gmax, hmax)
+		if (gmax < hmax)
+			*fmax = hmax;
+		else 
+			*fmax = gmax;
+		comp++;
+		//fmin = MIN (gmin, hmin)
+		if (gmin > hmin)
+			*fmin = hmin;
+		else 
+			*fmin = gmin;
+		comp++;
+		
+	}
+	return;
+}
+
+// Print the array
+void printArray(int arr[], int size) {
+  for (int i = 0; i < size; i++)
+    printf("| %d  |", arr[i]);
+  printf("\n");
+}
+
+
+int main()
+
+{
+	
+	int n, tries;
+	printf("------------------DIVIDE AND CONQUER--------------------");
+	printf("\nEnter number of tries :");
+	scanf("%d",&tries);
+	int tot_comp[tries], input_s[tries];
+	int maximum[tries], minimum[tries];
+	
+	for (int i=0; i<tries; i++)
+	{
+		printf("\n\nEnter the Size of the array : ");
+		scanf("%d",&n);
+			
+		int arr[n];
+		for(int i=0; i<n; i++)
+			arr[i]= rand()% 100 + 1;
+	    int fmax = arr[0], fmin = arr[0];
+        Rmaxmin(arr, 0, n-1, &fmax, &fmin);
+		
+		input_s[i] = n;
+		tot_comp[i]= comp;		
+		maximum[i] = fmax;
+		minimum[i] = fmin;
+		
+		printf("\nARRAY : ");
+		printArray(arr, n);
+		printf("\nMAX : %d", fmax);
+		printf("\nMIN : %d", fmin);
+		printf("\nNo of Comparisons : %d", comp);
+		comp =0;
+				
+	}
+		   // generating the table for comparison 
+	printf("\n______________________________________________________________________________\n");
+	printf("              |             |                |           |                     |\n");
+	printf(" Case Number  |  Input Size |        Max     |     Min   |   Total Comparisons |\n");
+	printf("______________|_____________|________________|___________|_____________________|\n");
+    
+	for (int j=0;j <tries;j++)
+    {
+	 printf("    %d )       |   %-4d      |     %-8d   |  %-8d |          %-5d      |\n", j+1, input_s[j], maximum[j], minimum[j], tot_comp[j]);
+	 printf("______________|_____________|________________|___________|_____________________|\n"); 	
+}
+
+}
